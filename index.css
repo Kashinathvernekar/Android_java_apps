@@ -1,0 +1,21 @@
+*{
+  border:0;
+  padding:0;
+  margin:0;
+}
+
+canvas{
+    position: absolute;
+    top: 100px;
+    left:100px;
+    border: 1px solid gray;
+}
+
+button{
+   	position:absolute; 
+   	margin-left:58%;   
+   	width:150px;
+	height:60px;
+	background-color:yellow;
+   	bottom:280px;
+}

@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>shapes</title>
+    <link href="index.css" rel="stylesheet">
+    <script>
+	var canvas,
+    context,
+    dragging = false,
+    dragStartLocation,
+    snapshot;
+
+
+
+function getCanvasCoordinates(event) {
+    var x = event.clientX - canvas.getBoundingClientRect().left,
+        y = event.clientY - canvas.getBoundingClientRect().top;
+
+    return {x: x, y: y};
+}
+
+function takeSnapshot() {
+    snapshot = context.getImageData(0, 0, canvas.width, canvas.height);
+}
+
+function restoreSnapshot() {
+    context.putImageData(snapshot, 0, 0);
+}
+
+function drawSquare(position){
+    var width=Math.abs(dragStartLocation.x - position.x)*(dragStartLocation.x<position.x?-1:1);
+    var height=Math.abs(2*(width))*(dragStartLocation.y<position.y?-1:1);
+    context.beginPath();
+    context.rect(position.x,position.y,height,width);
+    context.fill();
+    context.stroke();
+	
+}
+
+function dragStart(event) {
+    dragging = true;
+    dragStartLocation = getCanvasCoordinates(event);
+    takeSnapshot();
+	context.fillStyle =  '#'+Math.random().toString(16).substr(2,6);
+}
+
+function drag(event) {
+    var position;
+    if (dragging === true) {
+        restoreSnapshot();
+        position = getCanvasCoordinates(event);
+        
+        drawSquare(position);
+    }
+}
+
+function dragStop(event) {
+    dragging = false;
+    restoreSnapshot();
+    var position = getCanvasCoordinates(event);
+    drawSquare(position);
+	
+}
+
+
+function init() {
+    canvas = document.getElementById("canvas");
+    context = canvas.getContext('2d');
+    context.strokeStyle = 'yellow';
+    
+    context.lineWidth = 4;
+    context.lineCap = 'round';
+
+    canvas.addEventListener('mousedown', dragStart, false);
+    canvas.addEventListener('mousemove', drag, false);
+    canvas.addEventListener('mouseup', dragStop, false);
+ 
+}
+
+window.addEventListener('load', init, false);
+
+
+
+function reload() {
+   const context = canvas.getContext('2d');
+
+   context.clearRect(0, 0, canvas.width, canvas.height);
+}
+
+
+	</script>
+</head>
+
+<body>
+
+<canvas id="canvas" width="600" height="400"></canvas>
+<button onClick="reload();" >clear</button>
+</body>
+
+</html>
